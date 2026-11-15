@@ -51,7 +51,8 @@ jobs:
       - name: Publish APK as a Release (direct download)
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "apk-${{ github.run_number }}" CARM.apk --target "$GITHUB_SHA" --title "CARM APK #${{ github.run_number }}" --notes "Auto-built Android APK"
+        run: |
+          gh release create "apk-${{ github.run_number }}" CARM.apk --target "$GITHUB_SHA" --title "CARM APK build ${{ github.run_number }}" --notes "Auto-built Android APK"
   pages:
     runs-on: ubuntu-latest
     environment:
