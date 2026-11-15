@@ -27,9 +27,10 @@ jobs:
       - name: Apply logo.png (if present) and build number
         run: |
           P="${{ steps.u.outputs.proj }}"
-          IM=$(command -v magick || command -v convert)
           if [ -f logo.png ]; then
             echo "Using logo.png from the repo"
+            sudo apt-get update -qq && sudo apt-get install -y -qq imagemagick
+            IM=$(command -v magick || command -v convert)
             $IM logo.png -background "#0a0a0a" -flatten -resize 440x440 -gravity center -extent 512x512 "$P/icons/icon-512.png"
             $IM "$P/icons/icon-512.png" -resize 192x192 "$P/icons/icon-192.png"
           fi
@@ -66,7 +67,9 @@ jobs:
       - name: App icon, version number, signing key
         run: |
           cd proj
+          sudo apt-get update -qq && sudo apt-get install -y -qq imagemagick
           IM=$(command -v magick || command -v convert)
+          [ -n "$IM" ] || { echo "ImageMagick could not be installed"; exit 1; }
           R=android/app/src/main/res
           for d in mdpi:48:108 hdpi:72:162 xhdpi:96:216 xxhdpi:144:324 xxxhdpi:192:432; do
             IFS=: read n s f <<< "$d"
